@@ -7,17 +7,23 @@ import java.time.LocalDate;
 
 public class ContractService {
 
+    private OnlinePaymentService paymentService;
+
+    public ContractService(OnlinePaymentService paymentService) {
+        this.paymentService = paymentService;
+    }
+
     public void processContract(Contract contract, Integer months) {
-        OnlinePaymentService paymentService = new PaypalService();
+
         for(int i=1; i<=months; i++) {
-            double amount;
+            double amountIsntallment;
             LocalDate dateInstallment = contract.getDate().plusMonths(i);
             Double amountPerMonth = contract.getTotalValue()/months;
-            amount = amountPerMonth;
-            amount += paymentService.interest(amountPerMonth,i);
-            amount += paymentService.paymentFee(amount);
-            Installment installment = new Installment(dateInstallment, amount);
-            contract.getInstallments().add(installment);
+            amountIsntallment = amountPerMonth;
+            amountIsntallment += paymentService.interest(amountPerMonth,i);
+            amountIsntallment += paymentService.paymentFee(amountIsntallment);
+
+            contract.getInstallments().add(new Installment(dateInstallment, amountIsntallment));
         }
     }
 }

@@ -3,6 +3,7 @@ package application;
 import model.entities.Contract;
 import model.entities.Installment;
 import model.services.ContractService;
+import model.services.PaypalService;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -29,7 +30,7 @@ public class App {
         System.out.print("Number of installments: ");
         int months = sc.nextInt();
 
-        ContractService service = new ContractService();
+        ContractService service = new ContractService(new PaypalService());
         service.processContract(contract, months);
 
         System.out.println();
